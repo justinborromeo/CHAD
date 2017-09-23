@@ -2,6 +2,7 @@ package ajlp.mhacksxproject
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -24,9 +25,6 @@ import java.util.*
 
 
 
-
-
-
 class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
     override fun onClassifyTextMessageFinished(message:String, response: Boolean) {
@@ -44,6 +42,8 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar!!.hide()
+
+
 
         v_safety_button.setOnClickListener {
             safetyButton = !safetyButton
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                         {
                             val identity = result?.get("identity")?.getAsString()
                             val accessToken = result?.get("token")?.getAsString()
-                            setTitle(identity)
+                            setTitle("Stacy")
                             val builder = ChatClient.Properties.Builder()
 //                            builder.setRegion(ChatClient.ConnectionSt)
 //                            builder.setSynchronizationStrategy(ChatClient.SynchronizationStrategy.ALL)
