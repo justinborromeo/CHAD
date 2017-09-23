@@ -29,6 +29,8 @@ import java.util.ArrayList
 
 class ChatActivity:AppCompatActivity() {
 
+
+
     private var mMessagesRecyclerView:RecyclerView? = null
     private var mMessagesAdapter:MessagesAdapter? = null
     private var mWriteMessageEditText:EditText? = null
@@ -223,6 +225,8 @@ class ChatActivity:AppCompatActivity() {
         }
 
     }
+
+
     companion object {
         /*
      Change this URL to match the token URL for your quick start server

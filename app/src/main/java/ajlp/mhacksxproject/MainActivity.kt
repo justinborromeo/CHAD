@@ -10,28 +10,41 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.textColor
 import android.speech.RecognizerIntent
 import android.content.ActivityNotFoundException
+import android.os.Parcelable
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.widget.*
+import com.android.volley.*
 import com.google.gson.JsonObject
 import com.koushikdutta.async.future.FutureCallback
 import com.koushikdutta.ion.Ion
 import com.twilio.chat.*
 import java.util.*
+import com.android.volley.Request.Method.POST
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.HurlStack
+import com.android.volley.toolbox.BasicNetwork
+import com.android.volley.toolbox.DiskBasedCache
 
 
 
 
-class MainActivity : AppCompatActivity() {
+
+
+class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
+
+    override fun onClassifyTextMessageFinished(message:String, response: Boolean) {
+        if(response) textToSpeech = sayText("Stacy says " + message)
+    }
 
 
     private var mChatClient:ChatClient? = null
     private var mGeneralChannel:Channel? = null
     private val REQ_CODE_SPEECH_INPUT = 100
     var safetyButton = false
-    var textToSpeech:TextToSpeech? =null
+    var textToSpeech:TextToSpeech? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,16 +149,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        retrieveAccessTokenfromServer()
         super.onResume()
     }
 
     override fun onPause() {
-        if(textToSpeech != null){
-            textToSpeech?.stop()
-            textToSpeech?.shutdown()
-        }
-        mChatClient?.shutdown()
+//        if(textToSpeech != null){
+//            textToSpeech?.stop()
+//            textToSpeech?.shutdown()
+//        }
+//        mChatClient?.shutdown()
         super.onPause()
     }
 
@@ -220,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                 public override fun run() {
                     Log.d(ChatActivity.TAG, "Author: " + message.author)
                     if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
-                        textToSpeech = sayText(message.messageBody)
+                        classifyTextMessage(message.messageBody, this@MainActivity)
                     }
 
                     // need to modify user interface elements on the UI thread
@@ -277,6 +289,50 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    internal fun classifyTextMessage(textMessage: String, callback: ClassifyTextMessageCallback) {
+        val mRequestQueue: RequestQueue
+
+        // Instantiate the cache
+        val cache = DiskBasedCache(cacheDir, 1024 * 1024) // 1MB cap
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        val network = BasicNetwork(HurlStack())
+
+        // Instantiate the RequestQueue with the cache and network.
+        mRequestQueue = RequestQueue(cache, network)
+
+        // Start the queue
+        mRequestQueue.start()
+
+        val url = "http://35.202.120.11:81/classify"
+
+        // Formulate the request and handle the response.
+        val stringRequest = object : StringRequest(Request.Method.POST, url,
+                object : Response.Listener<String> {
+                    override fun onResponse(response: String) {
+                        val resp = Integer.parseInt(response) == 1
+                        callback.onClassifyTextMessageFinished(textMessage,resp)
+                    }
+                },
+                object : Response.ErrorListener {
+                    override fun onErrorResponse(error: VolleyError) {
+                        error.printStackTrace()
+                    }
+                }) {
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params.put("text", textMessage)
+
+                return params
+            }
+        }
+
+        // Add the request to the RequestQueue.
+        mRequestQueue.add(stringRequest)
+    }
+
+
     companion object {
         /*
      Change this URL to match the token URL for your quick start server
@@ -287,4 +343,5 @@ class MainActivity : AppCompatActivity() {
         internal val DEFAULT_CHANNEL_NAME = "general"
         internal val TAG = "TwilioChat"
     }
+
 }
