@@ -8,27 +8,30 @@
     tools:context="ajlp.mhacksxproject.MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="?attr/actionBarSize"
-        android:textColor="@color/textOnPrimary"
         android:id="@+id/appTitle"
         style="@style/appTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignBaseline="@+id/v_chat_button4"
+        android:layout_alignBottom="@+id/v_chat_button4"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="20dp"
         android:text="@string/app_name"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:textColor="@color/textOnPrimary" />
 
     <ImageButton
+        android:id="@+id/v_safety_button"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
-
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:padding="40dp"
-
         android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
+
         android:background="@color/colorPrimary"
-        android:src="@drawable/logo_off"
-        android:id="@+id/v_safety_button"/>
+        android:elevation="0dp"
+        android:padding="40dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/logo_off" />
 
     <TextView
         android:id="@+id/v_safety_enabled"
@@ -36,20 +39,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_below="@+id/v_safety_button"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/colorAccent"
+        android:layout_marginBottom="20dp"
         android:text="@string/mode_normal"
-        android:textSize="36sp" />
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
 
     <Button
+        android:id="@+id/v_chat_button"
+        style="@style/appButton"
         android:layout_width="wrap_content"
         android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:paddingRight="5dp"
         android:text="@string/chat"
-        android:id="@+id/v_chat_button"
-        style="@style/appButton"/>
+        android:textAlignment="textEnd" />
+
+    <Button
+        android:id="@+id/v_chat_button4"
+        style="@style/appButton"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="10dp"
+        android:text="Settings"
+        android:textAlignment="textStart" />
 
 
 </RelativeLayout>
