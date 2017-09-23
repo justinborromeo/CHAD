@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.gson.JsonObject
 import com.koushikdutta.async.future.FutureCallback
 import com.koushikdutta.ion.Ion
@@ -25,7 +22,7 @@ class ChatActivity:AppCompatActivity() {
     private var mMessagesRecyclerView:RecyclerView? = null
     private var mMessagesAdapter:MessagesAdapter? = null
     private var mWriteMessageEditText:EditText? = null
-    private var mSendChatMessageButton:Button? = null
+    private var mSendChatMessageButton: ImageButton? = null
     private var mChatClient:ChatClient? = null
     private var mGeneralChannel:Channel? = null
 
@@ -192,27 +189,35 @@ class ChatActivity:AppCompatActivity() {
 
         }
 
-        internal inner class ViewHolder(textView:TextView):RecyclerView.ViewHolder(textView) {
+        internal inner class ViewHolder(view:View):RecyclerView.ViewHolder(view) {
             var mMessageTextView:TextView
             init{
-                mMessageTextView = textView
+                mMessageTextView = view.findViewById(R.id.message_text)
             }
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            val message = UserData.Messages.get(position)
+            if (message.author == "Chad"){
+                return 1
+            }
+            return 0
         }
         override fun onCreateViewHolder(parent:ViewGroup,
                                viewType:Int):MessagesAdapter.ViewHolder {
-            val messageTextView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.message_text_view, parent, false) as TextView
-            return ViewHolder(messageTextView)
+            var view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_text_view_stacy, parent, false) as View
+            if (viewType == 1)
+                view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_text_view, parent, false) as View
+            return ViewHolder(view)
         }
         override fun onBindViewHolder(holder:ViewHolder, position:Int) {
             val message = UserData.Messages.get(position)
             Log.d(TAG, message.toString())
             Log.d(TAG, message.messageBody)
-            if(message != null){
-                val messageText = String.format("%s: %s", message.author, message.messageBody)
-                holder.mMessageTextView.setText(messageText)
-            }
 
+            holder.mMessageTextView.setText(message.messageBody)
         }
 
     }
