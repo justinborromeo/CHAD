@@ -1,5 +1,6 @@
 package ajlp.mhacksxproject
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
@@ -10,20 +11,32 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.textColor
 import android.speech.RecognizerIntent
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.speech.tts.TextToSpeech
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import java.util.*
+import android.os.Handler
+import android.util.Log
+import kotlin.concurrent.fixedRateTimer
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider
+
+
 
 
 class MainActivity : AppCompatActivity() {
-
+    private val LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION}
     private val REQ_CODE_SPEECH_INPUT = 100
     private val mVoiceInputTv: TextView? = null
     private val mSpeakBtn: ImageButton? = null
     var safetyButton = false
     var textToSpeech:TextToSpeech? =null
+    var locationManager: LocationManager? = null
+    var locationProvider: LocationProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +51,20 @@ class MainActivity : AppCompatActivity() {
         v_chat_button.setOnClickListener{
             startActivity(Intent(applicationContext, ChatActivity::class.java))
         }
+        requestPermissions(LOCATION_PERMISSIONS);
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager;
+        val timer = fixedRateTimer(name="GPSTimer", initialDelay=0, period=10000){
+            Log.d("GPSTimer","Timer event fired");
+            var lastKnownLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            try{
+                Log.d("latitude", lastKnownLocation?.latitude as String)
+                Log.d("longitude", lastKnownLocation?.longitude as String)
+            }catch(e: Exception){
+                Log.d("error", "location is null")
+            }
+        }
     }
+
 
 
     private fun setSafety(safetyEnabled:Boolean){
