@@ -31,7 +31,6 @@ class ChatActivity:AppCompatActivity() {
 
     private var mMessagesRecyclerView:RecyclerView? = null
     private var mMessagesAdapter:MessagesAdapter? = null
-    private var mMessages = ArrayList<Message>()
     private var mWriteMessageEditText:EditText? = null
     private var mSendChatMessageButton:Button? = null
     private var mChatClient:ChatClient? = null
@@ -74,8 +73,9 @@ class ChatActivity:AppCompatActivity() {
         retrieveAccessTokenfromServer()
     }
     private fun retrieveAccessTokenfromServer() {
-        val deviceId = "myDevice"
-        val tokenURL = SERVER_TOKEN_URL + "?device=" + deviceId
+//        val deviceId = "myDevice"
+//        val tokenURL = SERVER_TOKEN_URL + "?device=" + deviceId
+        val tokenURL = SERVER_TOKEN_URL + "/Chad"
         Ion.with(this)
                 .load(tokenURL)
                 .asJsonObject()
@@ -169,7 +169,7 @@ class ChatActivity:AppCompatActivity() {
             runOnUiThread(object:Runnable {
                 public override fun run() {
                     // need to modify user interface elements on the UI thread
-                    mMessages.add(message)
+                    UserData.Messages.add(message)
                     mMessagesAdapter?.notifyDataSetChanged()
                 }
             })
@@ -195,7 +195,8 @@ class ChatActivity:AppCompatActivity() {
     }
     internal inner class MessagesAdapter:RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
         override fun getItemCount(): Int {
-            return mMessages.size
+            return UserData.Messages.size
+
         }
 
         internal inner class ViewHolder(textView:TextView):RecyclerView.ViewHolder(textView) {
@@ -211,9 +212,14 @@ class ChatActivity:AppCompatActivity() {
             return ViewHolder(messageTextView)
         }
         override fun onBindViewHolder(holder:ViewHolder, position:Int) {
-            val message = mMessages.get(position)
-            val messageText = String.format("%s: %s", message.getAuthor(), message.getMessageBody())
-            holder.mMessageTextView.setText(messageText)
+            val message = UserData.Messages.get(position)
+            Log.d(TAG, message.toString())
+            Log.d(TAG, message.messageBody)
+            if(message != null){
+                val messageText = String.format("%s: %s", message.author, message.messageBody)
+                holder.mMessageTextView.setText(messageText)
+            }
+
         }
 
     }
@@ -223,8 +229,12 @@ class ChatActivity:AppCompatActivity() {
      Download the quick start server from:
      https://www.twilio.com/docs/api/ip-messaging/guides/quickstart-js
      */
-        internal val SERVER_TOKEN_URL = "http://localhost:8000/token.php"
+        internal val SERVER_TOKEN_URL = "http://35.202.120.11/token"
         internal val DEFAULT_CHANNEL_NAME = "general"
         internal val TAG = "TwilioChat"
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }
