@@ -23,8 +23,10 @@
         android:layout_height="wrap_content"
         android:text="@string/safety_disabled"
         style="@style/appInfo"
-        android:layout_centerHorizontal="true"
+        android:textSize="26sp"
         android:layout_below="@id/appTitle"
+        android:layout_marginTop="128dp"
+        android:layout_centerHorizontal="true"
         android:textColor="@color/colorWarning"
         android:id="@+id/v_safety_enabled"/>
 
@@ -34,7 +36,17 @@
         android:layout_below="@id/v_safety_enabled"
         android:layout_centerHorizontal="true"
         android:text="@string/on"
+        android:layout_marginTop="64dp"
         android:id="@+id/v_safety_button"
+        android:textSize="18sp"
         style="@style/appButton"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/chat"
+        android:id="@+id/v_chat_button"
+        style="@style/appButton"/>
 </RelativeLayout>

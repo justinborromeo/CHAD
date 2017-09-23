@@ -4,4 +4,6 @@
     <string name="safety_disabled">Safety Disabled</string>
     <string name="on">ENABLE</string>
     <string name="off">DISABLE</string>
+    <string name="chat">CHAT</string>
+    <string name="send">SEND</string>
 </resources>
