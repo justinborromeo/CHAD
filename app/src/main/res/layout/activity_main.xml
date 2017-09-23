@@ -38,7 +38,7 @@
 
         android:layout_below="@+id/v_safety_button"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/textOnPrimary"
         android:text="@string/mode_normal"
         android:textSize="36sp" />
 

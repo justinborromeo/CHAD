@@ -1,6 +1,8 @@
 package ajlp.mhacksxproject
 
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -29,6 +31,7 @@ class ChatActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+
         mMessagesRecyclerView = messagesRecyclerView
         val layoutManager = LinearLayoutManager(this)
         // for a chat app, show latest at the bottom
@@ -37,6 +40,8 @@ class ChatActivity:AppCompatActivity() {
         mMessagesAdapter = MessagesAdapter()
         mMessagesRecyclerView?.setAdapter(mMessagesAdapter)
         mWriteMessageEditText = writeMessageEditText
+        mWriteMessageEditText!!.getBackground().setColorFilter(ContextCompat.getColor(applicationContext, R.color.textOnPrimary), PorterDuff.Mode.SRC_IN);
+
         mSendChatMessageButton = sendChatMessageButton
         mSendChatMessageButton?.setOnClickListener(object:View.OnClickListener {
             override fun onClick(view:View) {
