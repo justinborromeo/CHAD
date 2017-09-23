@@ -1,7 +1,6 @@
 package ajlp.mhacksxproject
 
 import android.os.Bundle
-import android.provider.Settings.Secure
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -16,16 +15,8 @@ import android.widget.Toast
 import com.google.gson.JsonObject
 import com.koushikdutta.async.future.FutureCallback
 import com.koushikdutta.ion.Ion
-import com.twilio.chat.CallbackListener
-import com.twilio.chat.Channel
-import com.twilio.chat.ChannelListener
-import com.twilio.chat.ChatClient
-import com.twilio.chat.ErrorInfo
-import com.twilio.chat.Member
-import com.twilio.chat.Message
-import com.twilio.chat.StatusListener
+import com.twilio.chat.*
 import kotlinx.android.synthetic.main.activity_chat.*
-import java.util.ArrayList
 
 class ChatActivity:AppCompatActivity() {
 
@@ -233,7 +224,7 @@ class ChatActivity:AppCompatActivity() {
      Download the quick start server from:
      https://www.twilio.com/docs/api/ip-messaging/guides/quickstart-js
      */
-        internal val SERVER_TOKEN_URL = "http://35.202.120.11/token"
+        internal val SERVER_TOKEN_URL = "http://35.202.120.11/mhacks_chad/token"
         internal val DEFAULT_CHANNEL_NAME = "general"
         internal val TAG = "TwilioChat"
     }

@@ -331,7 +331,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
      Download the quick start server from:
      https://www.twilio.com/docs/api/ip-messaging/guides/quickstart-js
      */
-        internal val SERVER_TOKEN_URL = "http://35.202.120.11/token"
+        internal val SERVER_TOKEN_URL = "http://35.202.120.11/mhacks_chad/token"
         internal val DEFAULT_CHANNEL_NAME = "general"
         internal val TAG = "TwilioChat"
     }
