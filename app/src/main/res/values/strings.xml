@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MHacksXProject</string>
+    <string name="safety_enabled">Safety Enabled</string>
+    <string name="safety_disabled">Safety Disabled</string>
+    <string name="on">ENABLE</string>
+    <string name="off">DISABLE</string>
+</resources>
