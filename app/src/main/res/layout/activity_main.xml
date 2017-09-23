@@ -17,19 +17,20 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
 
-
-    <TextView
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/safety_disabled"
-        style="@style/appInfo"
-        android:textSize="36sp"
+
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:padding="40dp"
 
         android:layout_centerInParent="true"
-        android:textColor="@color/colorWarning"
-        android:id="@+id/v_safety_enabled"/>
+        android:background="@color/colorPrimary"
+        android:src="@drawable/logo_off"
+        android:id="@+id/v_safety_button"/>
 
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -38,7 +39,7 @@
         android:layout_marginBottom="64dp"
         android:id="@+id/v_safety_button"
         android:textSize="18sp"
-        style="@style/appButton"/>
+        style="@style/appButton"/>-->
 
     <Button
         android:layout_width="wrap_content"
@@ -48,4 +49,6 @@
         android:text="@string/chat"
         android:id="@+id/v_chat_button"
         style="@style/appButton"/>
+
+
 </RelativeLayout>

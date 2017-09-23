@@ -1,32 +1,26 @@
 package ajlp.mhacksxproject
 
 import android.app.Activity
-import android.content.Intent
-import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.textColor
-import android.speech.RecognizerIntent
 import android.content.ActivityNotFoundException
-import android.os.Parcelable
+import android.content.Intent
+import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
-import android.support.v7.widget.RecyclerView
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.*
+import android.widget.Toast
 import com.android.volley.*
+import com.android.volley.toolbox.BasicNetwork
+import com.android.volley.toolbox.DiskBasedCache
+import com.android.volley.toolbox.HurlStack
+import com.android.volley.toolbox.StringRequest
 import com.google.gson.JsonObject
 import com.koushikdutta.async.future.FutureCallback
 import com.koushikdutta.ion.Ion
 import com.twilio.chat.*
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
-import com.android.volley.Request.Method.POST
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.HurlStack
-import com.android.volley.toolbox.BasicNetwork
-import com.android.volley.toolbox.DiskBasedCache
 
 
 
@@ -66,13 +60,9 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
     private fun setSafety(safetyEnabled:Boolean){
         if(safetyEnabled){
-            v_safety_button.text = resources.getText(R.string.off)
-            v_safety_enabled.text = resources.getText(R.string.safety_enabled)
-            v_safety_enabled.textColor = ContextCompat.getColor(applicationContext, R.color.colorAccent)
+            v_safety_button.setImageResource(R.drawable.logo_on)
         }else{
-            v_safety_button.text = resources.getText(R.string.on)
-            v_safety_enabled.text = resources.getText(R.string.safety_disabled)
-            v_safety_enabled.textColor = ContextCompat.getColor(applicationContext, R.color.colorWarning)
+            v_safety_button.setImageResource(R.drawable.logo_off)
         }
     }
 
