@@ -3,43 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
 
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context=".ChatActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messagesRecyclerView"
-        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"/>
+        android:scrollbars="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_margin="0dp"
+        android:layout_weight="0"
         android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/default_item_spacing"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/default_item_spacing"
-        android:paddingBottom="@dimen/default_item_spacing">
+        android:paddingTop="@dimen/default_item_spacing">
+
         <EditText
-            android:layout_width="0dp"
-            android:layout_weight="10"
-            android:layout_height="wrap_content"
             android:id="@+id/writeMessageEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/default_item_spacing"
+            android:layout_weight="10"
             android:textColor="@color/colorAccent" />
-        <Button
+
+        <ImageButton
+            android:id="@+id/sendChatMessageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="@string/send"
-            android:id="@+id/sendChatMessageButton"/>
+            android:background="@drawable/ic_send"
+            android:padding="20dp" />
     </LinearLayout>
 
 </LinearLayout>
