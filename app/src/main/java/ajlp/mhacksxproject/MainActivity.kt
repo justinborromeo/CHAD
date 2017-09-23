@@ -30,7 +30,7 @@ import java.util.*
 class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
     override fun onClassifyTextMessageFinished(message:String, response: Boolean) {
-        if(response) textToSpeech = sayText("Stacy says " + message)
+        if(response) textToSpeech = sayText("Stacy sent you a message, $message. Would you like to reply?")
     }
 
 
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                                 override fun onSuccess(p0: Message?) {
                                     runOnUiThread {
                                         Toast.makeText(applicationContext, result[0], Toast.LENGTH_LONG).show()
-                                        textToSpeech = sayText("Message sent", false)
+                                        textToSpeech = sayText("OK, I sent stacy " + result[0], false)
                                     }
                                 }
                             }
@@ -301,7 +301,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 object : Response.Listener<String> {
                     override fun onResponse(response: String) {
                         val resp = Integer.parseInt(response) == 1
-                        callback.onClassifyTextMessageFinished(textMessage,resp)
+                        callback.onClassifyTextMessageFinished(textMessage, resp)
                     }
                 },
                 object : Response.ErrorListener {
