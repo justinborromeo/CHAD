@@ -61,8 +61,10 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
     private fun setSafety(safetyEnabled:Boolean){
         if(safetyEnabled){
             v_safety_button.setImageResource(R.drawable.logo_on)
+            v_safety_enabled.setText(R.string.mode_driving)
         }else{
             v_safety_button.setImageResource(R.drawable.logo_off)
+            v_safety_enabled.setText(R.string.mode_normal)
         }
     }
 

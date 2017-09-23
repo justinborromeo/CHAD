@@ -30,16 +30,17 @@
         android:src="@drawable/logo_off"
         android:id="@+id/v_safety_button"/>
 
-    <!--<Button
+    <TextView
+        android:id="@+id/v_safety_enabled"
+        style="@style/appInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+
+        android:layout_below="@+id/v_safety_button"
         android:layout_centerHorizontal="true"
-        android:text="@string/on"
-        android:layout_marginBottom="64dp"
-        android:id="@+id/v_safety_button"
-        android:textSize="18sp"
-        style="@style/appButton"/>-->
+        android:textColor="@color/colorAccent"
+        android:text="@string/mode_normal"
+        android:textSize="36sp" />
 
     <Button
         android:layout_width="wrap_content"
