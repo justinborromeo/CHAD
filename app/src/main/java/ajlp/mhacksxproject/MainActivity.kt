@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
     override fun onClassifyTextMessageFinished(author:String, message:String, response: Boolean) {
         if(response) textToSpeech = sayText(author + " sent you a message, $message. Would you like to reply?")
+        else sendAutoReply()
     }
 
     private var mChatClient:ChatClient? = null
@@ -289,25 +290,18 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
         override fun onMessageAdded(message: Message) {
             Log.d(ChatActivity.TAG, "Message added")
-            runOnUiThread(object:Runnable {
-                public override fun run() {
-                    Log.d(ChatActivity.TAG, "Author: " + message.author)
-                    if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
-                        if(defaultSharedPreferences.getInt("filter", -1) != -1){
-                            when(defaultSharedPreferences.getInt("filter", -1)){
-                                0 -> sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
-                                1 -> classifyTextMessage(message.author, message.messageBody, this@MainActivity)
-                                2 -> sendAutoReply()
-
-                            }
+                Log.d(ChatActivity.TAG, "Author: " + message.author)
+                if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
+                    if(defaultSharedPreferences.getInt("filter", -1) != -1){
+                        when(defaultSharedPreferences.getInt("filter", -1)){
+                            0 -> sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
+                            1 -> classifyTextMessage(message.author, message.messageBody, this@MainActivity)
+                            2 -> sendAutoReply()
                         }
-
                     }
-
-                    // need to modify user interface elements on the UI thread
-                    UserData.Messages.add(message)
-                }
-            })
+                // need to modify user interface elements on the UI thread
+                UserData.Messages.add(message)
+            }
         }
         override fun onMessageDeleted(message: Message) {
             Log.d(ChatActivity.TAG, "Message deleted")
