@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.defaultSharedPreferences
 import java.util.*
 
-
+//asdf
 
 class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
