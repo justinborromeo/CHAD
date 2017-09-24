@@ -24,6 +24,7 @@ import com.koushikdutta.async.future.FutureCallback
 import com.koushikdutta.ion.Ion
 import com.twilio.chat.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.jetbrains.anko.defaultSharedPreferences
 import java.util.*
 
 
@@ -45,6 +46,15 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar!!.hide()
+
+        if(defaultSharedPreferences.getInt("filter", -1) == -1){
+            defaultSharedPreferences.edit().putInt("filter", 1).apply()
+        }
+
+        if(defaultSharedPreferences.getString("autoReply", "") == ""){
+            defaultSharedPreferences.edit().putString("autoReply", "I'm driving right now, ttyl.").apply()
+
+        }
 
         v_safety_button.setOnClickListener {
             safetyButton = !safetyButton
@@ -115,6 +125,16 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
     }
 
+    fun sendAutoReply(){
+        val message = Message.options().withBody(defaultSharedPreferences.getString("autoReply",""))
+        val listener: CallbackListener<Message> =
+                object : CallbackListener<Message>() {
+                    override fun onSuccess(p0: Message?) {
+                    }
+                }
+        mGeneralChannel!!.messages.sendMessage(message, listener)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -133,6 +153,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                             state++
                             textToSpeech = sayText("Sure, go ahead.", true)
                         }else{
+                            sendAutoReply()
                             textToSpeech = sayText("OK, I'll know next time.", false)
                         }
                     }else{
@@ -272,7 +293,15 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 public override fun run() {
                     Log.d(ChatActivity.TAG, "Author: " + message.author)
                     if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
-                        classifyTextMessage(message.author, message.messageBody, this@MainActivity)
+                        if(defaultSharedPreferences.getInt("filter", -1) != -1){
+                            when(defaultSharedPreferences.getInt("filter", -1)){
+                                0 -> sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
+                                1 -> classifyTextMessage(message.author, message.messageBody, this@MainActivity)
+                                2 -> sendAutoReply()
+
+                            }
+                        }
+
                     }
 
                     // need to modify user interface elements on the UI thread
