@@ -99,6 +99,8 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                         if (!messageBody.contains("no")){
                             state++
                             textToSpeech = sayText("Sure, go ahead.", true)
+                        }else{
+                            textToSpeech = sayText("OK, I'll know next time.", false)
                         }
                     }else{
                         val message = Message.options().withBody(messageBody)
