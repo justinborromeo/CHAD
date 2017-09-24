@@ -316,8 +316,8 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 }
                 // need to modify user interface elements on the UI thread
                 UserData.Messages.add(message)
-            }
         }
+
         override fun onMessageDeleted(message: Message) {
             Log.d(ChatActivity.TAG, "Message deleted")
         }
