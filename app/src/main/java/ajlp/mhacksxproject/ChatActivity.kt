@@ -8,7 +8,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
+import android.widget.Toast
 import com.google.gson.JsonObject
 import com.koushikdutta.async.future.FutureCallback
 import com.koushikdutta.ion.Ion
@@ -65,7 +68,7 @@ class ChatActivity:AppCompatActivity() {
     private fun retrieveAccessTokenfromServer() {
 //        val deviceId = "myDevice"
 //        val tokenURL = SERVER_TOKEN_URL + "?device=" + deviceId
-        val tokenURL = SERVER_TOKEN_URL + "/Chad"
+        val tokenURL = SERVER_TOKEN_URL + "/" + getString(R.string.username)
         Ion.with(this)
                 .load(tokenURL)
                 .asJsonObject()
@@ -198,7 +201,7 @@ class ChatActivity:AppCompatActivity() {
 
         override fun getItemViewType(position: Int): Int {
             val message = UserData.Messages.get(position)
-            if (message.author == "Chad"){
+            if (message.author == getString(R.string.username)){
                 return 1
             }
             return 0
