@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
     private val REQ_CODE_SPEECH_INPUT = 100
     var safetyButton = false
     var textToSpeech:TextToSpeech? = null
+    private var state = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,24 +91,36 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 if (resultCode == Activity.RESULT_OK && null != data) {
                     val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     val messageBody = result[0].toString()
-                    val message = Message.options().withBody(messageBody)
-                    Log.d(ChatActivity.TAG, "Message created")
-                    val listener: CallbackListener<Message> =
-                            object:CallbackListener<Message>() {
-                                override fun onSuccess(p0: Message?) {
-                                    runOnUiThread {
-                                        Toast.makeText(applicationContext, result[0], Toast.LENGTH_LONG).show()
-                                        textToSpeech = sayText("OK, I sent stacy " + result[0], false)
+
+                    if (state == 0) {
+                        Log.d("test", messageBody);
+                        Log.d("test", messageBody.contains("no").toString());
+
+                        if (!messageBody.contains("no")){
+                            state++
+                            textToSpeech = sayText("Sure, go ahead.", true)
+                        }
+                    }else{
+                        val message = Message.options().withBody(messageBody)
+                        Log.d(ChatActivity.TAG, "Message created")
+                        val listener: CallbackListener<Message> =
+                                object : CallbackListener<Message>() {
+                                    override fun onSuccess(p0: Message?) {
+                                        runOnUiThread {
+                                            Toast.makeText(applicationContext, result[0], Toast.LENGTH_LONG).show()
+                                            textToSpeech = sayText("OK, I replied " + result[0], false)
+                                        }
                                     }
                                 }
-                            }
-                    mGeneralChannel!!.messages.sendMessage(message, listener)
+                        mGeneralChannel!!.messages.sendMessage(message, listener)
+                        state = 0
+                    }
                 }
             }
         }
     }
 
-    private fun sayText(text : String, startVoice : Boolean = true) : TextToSpeech{
+    private fun sayText(text: String, startVoice: Boolean = true) : TextToSpeech{
         if(textToSpeech != null){
             textToSpeech?.stop()
             textToSpeech?.shutdown()
