@@ -24,12 +24,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider
-
-
+import android.os.Message
 
 
 class MainActivity : AppCompatActivity() {
-    private val LOCATION_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION}
     private val REQ_CODE_SPEECH_INPUT = 100
     private val mVoiceInputTv: TextView? = null
     private val mSpeakBtn: ImageButton? = null
@@ -48,26 +46,18 @@ class MainActivity : AppCompatActivity() {
             setSafety(safetyButton)
         }
 
-        v_chat_button.setOnClickListener{
+        v_chat_button.setOnClickListener {
             startActivity(Intent(applicationContext, ChatActivity::class.java))
         }
-        requestPermissions(LOCATION_PERMISSIONS);
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager;
-        val timer = fixedRateTimer(name="GPSTimer", initialDelay=0, period=10000){
-            Log.d("GPSTimer","Timer event fired");
-            var lastKnownLocation = locationManager?.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            try{
-                Log.d("latitude", lastKnownLocation?.latitude as String)
-                Log.d("longitude", lastKnownLocation?.longitude as String)
-            }catch(e: Exception){
-                Log.d("error", "location is null")
-            }
-        }
+        var listener = locationListener()
+        var mLocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                3000,          // 10-second interval.
+                1.0f,             // 10 meters.
+                listener);
     }
 
-
-
-    private fun setSafety(safetyEnabled:Boolean){
+    public fun setSafety(safetyEnabled:Boolean){
         if(safetyEnabled){
             startVoiceInput()
             v_safety_button.text = resources.getText(R.string.off)
