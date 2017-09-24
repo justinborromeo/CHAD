@@ -27,8 +27,8 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
-    override fun onClassifyTextMessageFinished(message:String, response: Boolean) {
-        if(response) textToSpeech = sayText("Stacy sent you a message, $message. Would you like to reply?")
+    override fun onClassifyTextMessageFinished(author:String, message:String, response: Boolean) {
+        if(response) textToSpeech = sayText(author + " sent you a message, $message. Would you like to reply?")
     }
 
     private var mChatClient:ChatClient? = null
@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hello, How can I help you?")
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT)
         } catch (a: ActivityNotFoundException) {
@@ -100,6 +99,8 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                         if (!messageBody.contains("no")){
                             state++
                             textToSpeech = sayText("Sure, go ahead.", true)
+                        }else{
+                            textToSpeech = sayText("OK, I'll know next time.", false)
                         }
                     }else{
                         val message = Message.options().withBody(messageBody)
@@ -170,7 +171,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
     private fun retrieveAccessTokenfromServer() {
 //        val deviceId = "myDevice"
 //        val tokenURL = ChatActivity.SERVER_TOKEN_URL + "?device=" + deviceId
-        val tokenURL = SERVER_TOKEN_URL + "/Chad"
+        val tokenURL = SERVER_TOKEN_URL + "/" + getString(R.string.username)
         Ion.with(this)
                 .load(tokenURL)
                 .asJsonObject()
@@ -238,7 +239,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 public override fun run() {
                     Log.d(ChatActivity.TAG, "Author: " + message.author)
                     if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
-                        classifyTextMessage(message.messageBody, this@MainActivity)
+                        classifyTextMessage(message.author, message.messageBody, this@MainActivity)
                     }
 
                     // need to modify user interface elements on the UI thread
@@ -295,7 +296,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         })
     }
 
-    internal fun classifyTextMessage(textMessage: String, callback: ClassifyTextMessageCallback) {
+    internal fun classifyTextMessage(author: String, textMessage: String, callback: ClassifyTextMessageCallback) {
         val mRequestQueue: RequestQueue
 
         // Instantiate the cache
@@ -317,7 +318,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 object : Response.Listener<String> {
                     override fun onResponse(response: String) {
                         val resp = Integer.parseInt(response) == 1
-                        callback.onClassifyTextMessageFinished(textMessage, resp)
+                        callback.onClassifyTextMessageFinished(author, textMessage, resp)
                     }
                 },
                 object : Response.ErrorListener {
