@@ -290,15 +290,15 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
         override fun onMessageAdded(message: Message) {
             Log.d(ChatActivity.TAG, "Message added")
-                Log.d(ChatActivity.TAG, "Author: " + message.author)
-                if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
-                    if(defaultSharedPreferences.getInt("filter", -1) != -1){
-                        when(defaultSharedPreferences.getInt("filter", -1)){
-                            0 -> textToSpeech = sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
-                            1 -> classifyTextMessage(message.author, message.messageBody, this@MainActivity)
-                            2 -> sendAutoReply()
-                        }
+            Log.d(ChatActivity.TAG, "Author: " + message)
+            if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
+                if(defaultSharedPreferences.getInt("filter", -1) != -1){
+                    when(defaultSharedPreferences.getInt("filter", -1)){
+                        0 -> textToSpeech = sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
+                        1 -> classifyTextMessage(message.author, message.messageBody, this@MainActivity)
+                        2 -> sendAutoReply()
                     }
+                }
                 // need to modify user interface elements on the UI thread
                 UserData.Messages.add(message)
             }
