@@ -2,6 +2,7 @@ package ajlp.mhacksxproject
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -24,21 +25,18 @@ import java.util.*
 
 
 
-
-
-
 class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
     override fun onClassifyTextMessageFinished(author:String, message:String, response: Boolean) {
         if(response) textToSpeech = sayText(author + " sent you a message, $message. Would you like to reply?")
     }
 
-
     private var mChatClient:ChatClient? = null
     private var mGeneralChannel:Channel? = null
     private val REQ_CODE_SPEECH_INPUT = 100
     var safetyButton = false
     var textToSpeech:TextToSpeech? = null
+    private var state = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +50,10 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
         v_chat_button.setOnClickListener{
             startActivity(Intent(applicationContext, ChatActivity::class.java))
+        }
+
+        v_setting_button.setOnClickListener{
+            startActivity(Intent(applicationContext, SettingsActivity::class.java))
         }
 
         retrieveAccessTokenfromServer()
@@ -89,24 +91,36 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 if (resultCode == Activity.RESULT_OK && null != data) {
                     val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     val messageBody = result[0].toString()
-                    val message = Message.options().withBody(messageBody)
-                    Log.d(ChatActivity.TAG, "Message created")
-                    val listener: CallbackListener<Message> =
-                            object:CallbackListener<Message>() {
-                                override fun onSuccess(p0: Message?) {
-                                    runOnUiThread {
-                                        Toast.makeText(applicationContext, result[0], Toast.LENGTH_LONG).show()
-                                        textToSpeech = sayText("OK, I sent stacy " + result[0], false)
+
+                    if (state == 0) {
+                        Log.d("test", messageBody);
+                        Log.d("test", messageBody.contains("no").toString());
+
+                        if (!messageBody.contains("no")){
+                            state++
+                            textToSpeech = sayText("Sure, go ahead.", true)
+                        }
+                    }else{
+                        val message = Message.options().withBody(messageBody)
+                        Log.d(ChatActivity.TAG, "Message created")
+                        val listener: CallbackListener<Message> =
+                                object : CallbackListener<Message>() {
+                                    override fun onSuccess(p0: Message?) {
+                                        runOnUiThread {
+                                            Toast.makeText(applicationContext, result[0], Toast.LENGTH_LONG).show()
+                                            textToSpeech = sayText("OK, I replied " + result[0], false)
+                                        }
                                     }
                                 }
-                            }
-                    mGeneralChannel!!.messages.sendMessage(message, listener)
+                        mGeneralChannel!!.messages.sendMessage(message, listener)
+                        state = 0
+                    }
                 }
             }
         }
     }
 
-    private fun sayText(text : String, startVoice : Boolean = true) : TextToSpeech{
+    private fun sayText(text: String, startVoice: Boolean = true) : TextToSpeech{
         if(textToSpeech != null){
             textToSpeech?.stop()
             textToSpeech?.shutdown()
@@ -165,7 +179,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                         {
                             val identity = result?.get("identity")?.getAsString()
                             val accessToken = result?.get("token")?.getAsString()
-                            setTitle(identity)
+                            setTitle("Stacy")
                             val builder = ChatClient.Properties.Builder()
 //                            builder.setRegion(ChatClient.ConnectionSt)
 //                            builder.setSynchronizationStrategy(ChatClient.SynchronizationStrategy.ALL)

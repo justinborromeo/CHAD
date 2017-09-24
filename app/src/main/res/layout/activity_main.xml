@@ -12,8 +12,8 @@
         style="@style/appTitle"
         android:layout_width="wrap_content"
         android:layout_height="?attr/actionBarSize"
-        android:layout_alignBaseline="@+id/v_chat_button4"
-        android:layout_alignBottom="@+id/v_chat_button4"
+        android:layout_alignBaseline="@+id/v_setting_button"
+        android:layout_alignBottom="@+id/v_setting_button"
         android:layout_centerHorizontal="true"
         android:paddingTop="20dp"
         android:text="@string/app_name"
@@ -58,7 +58,7 @@
         android:textAlignment="textEnd" />
 
     <Button
-        android:id="@+id/v_chat_button4"
+        android:id="@+id/v_setting_button"
         style="@style/appButton"
         android:layout_width="wrap_content"
         android:layout_height="?attr/actionBarSize"
