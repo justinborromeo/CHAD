@@ -34,7 +34,9 @@ import java.util.*
 class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
     override fun onClassifyTextMessageFinished(message:Message, response: Boolean) {
-        if(response) textToSpeech = sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
+        if(response) {
+            textToSpeech = sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
+        }
         else{
             sendAutoReply()
         }
@@ -176,10 +178,11 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                         Log.d(ChatActivity.TAG, "Message created")
                         val listener: CallbackListener<Message> =
                                 object : CallbackListener<Message>() {
-                                    override fun onSuccess(p0: Message?) {
+                                    override fun onSuccess(message: Message?) {
                                         runOnUiThread {
                                             Toast.makeText(applicationContext, result[0], Toast.LENGTH_LONG).show()
                                             textToSpeech = sayText("OK, I replied " + result[0], false)
+                                            UserData.Messages.add(message!!)
                                         }
                                     }
                                 }
