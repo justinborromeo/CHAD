@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">MHacksXProject</string>
-    <string name="mode_driving">Driving Mode</string>
-    <string name="mode_normal">Normal Mode</string>
+    <string name="app_name">CHAD</string>
+    <string name="mode_driving">DRIVING</string>
+    <string name="mode_normal">NORMAL</string>
     <string name="on">ENABLE</string>
     <string name="off">DISABLE</string>
     <string name="chat">CHAT</string>

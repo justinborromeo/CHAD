@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         if(response) textToSpeech = sayText("Stacy sent you a message, $message. Would you like to reply?")
     }
 
-
     private var mChatClient:ChatClient? = null
     private var mGeneralChannel:Channel? = null
     private val REQ_CODE_SPEECH_INPUT = 100
@@ -43,8 +42,6 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         setContentView(R.layout.activity_main)
         supportActionBar!!.hide()
 
-
-
         v_safety_button.setOnClickListener {
             safetyButton = !safetyButton
             setSafety(safetyButton)
@@ -52,6 +49,10 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
         v_chat_button.setOnClickListener{
             startActivity(Intent(applicationContext, ChatActivity::class.java))
+        }
+
+        v_setting_button.setOnClickListener{
+            startActivity(Intent(applicationContext, SettingsActivity::class.java))
         }
 
         retrieveAccessTokenfromServer()

@@ -80,7 +80,7 @@ class ChatActivity:AppCompatActivity() {
                         {
                             val identity = result?.get("identity")?.getAsString()
                             val accessToken = result?.get("token")?.getAsString()
-                            setTitle(identity)
+                            title = "Stacy"
                             val builder = ChatClient.Properties.Builder()
 //                            builder.setRegion(ChatClient.ConnectionSt)
 //                            builder.setSynchronizationStrategy(ChatClient.SynchronizationStrategy.ALL)
