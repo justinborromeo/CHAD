@@ -13,6 +13,8 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import com.android.volley.*
 import com.android.volley.toolbox.BasicNetwork
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
     var safetyButton = false
     var textToSpeech:TextToSpeech? = null
     private var state = 0
+    var safetyModeOn = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,22 +84,16 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 Log.d("Longitude", java.lang.Double.toString(location.longitude))
                 Log.d("Time", Date(location.time).toString())
                 Log.d("Speed", java.lang.Float.toString(location.speed))
-                if((location.speed)>2f){
+                if((location.speed)>2f && !safetyModeOn){
                     setSafety(true)
+                    textToSpeech = sayText("Driving detected.  Switching to driving mode.", false)
                 }
-
             }
-
             override fun onStatusChanged(s: String, i: Int, bundle: Bundle) {
-
             }
-
             override fun onProviderEnabled(s: String) {
-
             }
-
             override fun onProviderDisabled(s: String) {
-
             }
         }
         var mLocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -104,6 +101,16 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 3000,          // 10-second interval.
                 0f,             // 10 meters.
                 listener);
+        v_safety_enabled.setOnClickListener(object: View.OnClickListener {
+            override fun onClick(view: View): Unit{
+                if(!safetyModeOn){
+                    setSafety(true)
+                    textToSpeech = sayText("Driving detected.  Switching to driving mode.", false)
+                }
+
+
+            }
+        })
     }
 
 
@@ -111,9 +118,11 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         if(safetyEnabled){
             v_safety_button.setImageResource(R.drawable.logo_on)
             v_safety_enabled.setText(R.string.mode_driving)
+            safetyModeOn=true
         }else{
             v_safety_button.setImageResource(R.drawable.logo_off)
             v_safety_enabled.setText(R.string.mode_normal)
+            safetyModeOn=false
         }
     }
 
