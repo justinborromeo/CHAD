@@ -49,15 +49,38 @@ class MainActivity : AppCompatActivity() {
         v_chat_button.setOnClickListener {
             startActivity(Intent(applicationContext, ChatActivity::class.java))
         }
-        var listener = locationListener()
+        val listener = object: LocationListener{
+            override fun onLocationChanged(location: Location) {
+                Log.d("Latitude", java.lang.Double.toString(location.latitude))
+                Log.d("Longitude", java.lang.Double.toString(location.longitude))
+                Log.d("Time", Date(location.time).toString())
+                Log.d("Speed", java.lang.Float.toString(location.speed))
+                if((location.speed)>2f){
+                    setSafety(true)
+                }
+
+            }
+
+            override fun onStatusChanged(s: String, i: Int, bundle: Bundle) {
+
+            }
+
+            override fun onProviderEnabled(s: String) {
+
+            }
+
+            override fun onProviderDisabled(s: String) {
+
+            }
+        }
         var mLocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 3000,          // 10-second interval.
-                1.0f,             // 10 meters.
+                0f,             // 10 meters.
                 listener);
     }
 
-    public fun setSafety(safetyEnabled:Boolean){
+    fun setSafety(safetyEnabled:Boolean){
         if(safetyEnabled){
             startVoiceInput()
             v_safety_button.text = resources.getText(R.string.off)

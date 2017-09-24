@@ -12,11 +12,18 @@ import java.util.Date;
  */
 
 public class locationListener implements LocationListener {
+    public double latitude=0;
+    public double longitude=0;
+    public double speed=0;
+
     @Override
     public void onLocationChanged(Location location) {
         Log.d("Latitude", Double.toString(location.getLatitude()));
         Log.d("Longitude", Double.toString(location.getLongitude()));
         Log.d("Time", new Date(location.getTime()).toString());
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        speed = location.getTime();
     }
 
     @Override
