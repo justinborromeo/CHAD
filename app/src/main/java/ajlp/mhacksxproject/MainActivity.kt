@@ -294,7 +294,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
                     if(defaultSharedPreferences.getInt("filter", -1) != -1){
                         when(defaultSharedPreferences.getInt("filter", -1)){
-                            0 -> sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
+                            0 -> textToSpeech = sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
                             1 -> classifyTextMessage(message.author, message.messageBody, this@MainActivity)
                             2 -> sendAutoReply()
                         }
