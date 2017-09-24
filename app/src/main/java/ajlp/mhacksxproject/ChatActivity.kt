@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -27,6 +28,7 @@ class ChatActivity:AppCompatActivity() {
     private var mSendChatMessageButton: ImageButton? = null
     private var mChatClient:ChatClient? = null
     private var mGeneralChannel:Channel? = null
+
 
     override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState)
@@ -237,6 +239,14 @@ class ChatActivity:AppCompatActivity() {
         internal val SERVER_TOKEN_URL = "http://35.202.120.11/mhacks_chad/token"
         internal val DEFAULT_CHANNEL_NAME = "general"
         internal val TAG = "TwilioChat"
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(android.R.id.home == item?.itemId){
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
