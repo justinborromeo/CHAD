@@ -1,8 +1,10 @@
 package ajlp.mhacksxproject
 
+import com.twilio.chat.Message
+
 /**
  * Created by alessiosymons on 2017-09-23.
  */
 interface ClassifyTextMessageCallback {
-    fun onClassifyTextMessageFinished(author:String, message:String, response: Boolean)
+    fun onClassifyTextMessageFinished(message: Message, response: Boolean)
 }

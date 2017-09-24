@@ -1,5 +1,6 @@
 package ajlp.mhacksxproject
 
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -21,7 +22,8 @@ import com.koushikdutta.ion.Ion
 import com.twilio.chat.*
 import kotlinx.android.synthetic.main.activity_chat.*
 
-class ChatActivity:AppCompatActivity() {
+class ChatActivity:AppCompatActivity(){
+
 
 
 
@@ -37,6 +39,8 @@ class ChatActivity:AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        setTitle("Stacy")
+
         mMessagesRecyclerView = messagesRecyclerView
         val layoutManager = LinearLayoutManager(this)
         // for a chat app, show latest at the bottom
@@ -47,11 +51,13 @@ class ChatActivity:AppCompatActivity() {
         mWriteMessageEditText = writeMessageEditText
         mWriteMessageEditText!!.getBackground().setColorFilter(ContextCompat.getColor(applicationContext, R.color.textOnPrimary), PorterDuff.Mode.SRC_IN);
 
+        retrieveAccessTokenfromServer()
         mSendChatMessageButton = sendChatMessageButton
         mSendChatMessageButton?.setOnClickListener(object:View.OnClickListener {
             override fun onClick(view:View) {
                 if (mGeneralChannel != null)
                 {
+
                     val messageBody = (mWriteMessageEditText as EditText?)?.text.toString()
                     val message = Message.options().withBody(messageBody)
                     Log.d(TAG, "Message created")
@@ -70,8 +76,9 @@ class ChatActivity:AppCompatActivity() {
                 }
             }
         })
-        retrieveAccessTokenfromServer()
     }
+
+
     private fun retrieveAccessTokenfromServer() {
 //        val deviceId = "myDevice"
 //        val tokenURL = SERVER_TOKEN_URL + "?device=" + deviceId
@@ -165,7 +172,7 @@ class ChatActivity:AppCompatActivity() {
         }
 
         override fun onMessageAdded(message:Message) {
-            Log.d(TAG, "Message added")
+            Log.d(TAG, "Message added (CHAT)")
             runOnUiThread(object:Runnable {
                 public override fun run() {
                     // need to modify user interface elements on the UI thread
@@ -208,9 +215,10 @@ class ChatActivity:AppCompatActivity() {
 
         override fun getItemViewType(position: Int): Int {
             val message = UserData.Messages.get(position)
-            if (message.author == getString(R.string.username)){
-                return 1
-            }
+                if (message.author == getString(R.string.username)){
+                    return 1
+                }
+
             return 0
         }
         override fun onCreateViewHolder(parent:ViewGroup,
@@ -224,10 +232,12 @@ class ChatActivity:AppCompatActivity() {
         }
         override fun onBindViewHolder(holder:ViewHolder, position:Int) {
             val message = UserData.Messages.get(position)
-            Log.d(TAG, message.toString())
-            Log.d(TAG, message.messageBody)
+                Log.d(TAG, message.toString())
+                Log.d(TAG, message.messageBody)
 
-            holder.mMessageTextView.setText(message.messageBody)
+                holder.mMessageTextView.setText(message.messageBody)
+
+
         }
 
     }
@@ -246,13 +256,17 @@ class ChatActivity:AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if(android.R.id.home == item?.itemId){
-            onBackPressed()
+            startActivity(Intent(applicationContext, MainActivity::class.java))
+            finish()
             return true
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onBackPressed() {
+        startActivity(Intent(applicationContext, MainActivity::class.java))
+        finish()
+        super.onBackPressed()
     }
+
 }
