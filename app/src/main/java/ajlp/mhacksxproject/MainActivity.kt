@@ -4,6 +4,9 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
@@ -57,6 +60,36 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         }
 
         retrieveAccessTokenfromServer()
+
+        val listener = object: LocationListener {
+            override fun onLocationChanged(location: Location) {
+                Log.d("Latitude", java.lang.Double.toString(location.latitude))
+                Log.d("Longitude", java.lang.Double.toString(location.longitude))
+                Log.d("Time", Date(location.time).toString())
+                Log.d("Speed", java.lang.Float.toString(location.speed))
+                if((location.speed)>2f){
+                    setSafety(true)
+                }
+
+            }
+
+            override fun onStatusChanged(s: String, i: Int, bundle: Bundle) {
+
+            }
+
+            override fun onProviderEnabled(s: String) {
+
+            }
+
+            override fun onProviderDisabled(s: String) {
+
+            }
+        }
+        var mLocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                3000,          // 10-second interval.
+                0f,             // 10 meters.
+                listener);
     }
 
 
