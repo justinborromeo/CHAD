@@ -31,9 +31,11 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
-    override fun onClassifyTextMessageFinished(author:String, message:String, response: Boolean) {
-        if(response) textToSpeech = sayText(author + " sent you a message, $message. Would you like to reply?")
-        else sendAutoReply()
+    override fun onClassifyTextMessageFinished(message:Message, response: Boolean) {
+        if(response) textToSpeech = sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
+        else{
+            sendAutoReply()
+        }
     }
 
     private var mChatClient:ChatClient? = null
@@ -57,6 +59,8 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
         }
 
+        retrieveAccessTokenfromServer()
+
         v_safety_button.setOnClickListener {
             safetyButton = !safetyButton
             setSafety(safetyButton)
@@ -64,13 +68,12 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
 
         v_chat_button.setOnClickListener{
             startActivity(Intent(applicationContext, ChatActivity::class.java))
+            finish()
         }
 
         v_setting_button.setOnClickListener{
             startActivity(Intent(applicationContext, SettingsActivity::class.java))
         }
-
-        retrieveAccessTokenfromServer()
 
         val listener = object: LocationListener {
             override fun onLocationChanged(location: Location) {
@@ -130,10 +133,12 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         val message = Message.options().withBody(defaultSharedPreferences.getString("autoReply",""))
         val listener: CallbackListener<Message> =
                 object : CallbackListener<Message>() {
-                    override fun onSuccess(p0: Message?) {
+                    override fun onSuccess(message: Message?) {
+                        UserData.Messages.add(message!!)
                     }
                 }
         mGeneralChannel!!.messages.sendMessage(message, listener)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -215,11 +220,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
     }
 
     override fun onPause() {
-//        if(textToSpeech != null){
-//            textToSpeech?.stop()
-//            textToSpeech?.shutdown()
-//        }
-//        mChatClient?.shutdown()
+        Log.d("CLIENT SHUTDOWN", "SHUTDOWN")
         super.onPause()
     }
 
@@ -289,13 +290,13 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         }
 
         override fun onMessageAdded(message: Message) {
-            Log.d(ChatActivity.TAG, "Message added")
+            Log.d(ChatActivity.TAG, "Message added(MAIN)")
                 Log.d(ChatActivity.TAG, "Author: " + message.author)
                 if(mChatClient != null && mChatClient?.myIdentity != message.author && safetyButton){
                     if(defaultSharedPreferences.getInt("filter", -1) != -1){
                         when(defaultSharedPreferences.getInt("filter", -1)){
                             0 -> textToSpeech = sayText(message.author + " sent you a message, ${message.messageBody}. Would you like to reply?")
-                            1 -> classifyTextMessage(message.author, message.messageBody, this@MainActivity)
+                            1 -> classifyTextMessage(message, this@MainActivity)
                             2 -> sendAutoReply()
                         }
                     }
@@ -352,7 +353,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         })
     }
 
-    internal fun classifyTextMessage(author: String, textMessage: String, callback: ClassifyTextMessageCallback) {
+    internal fun classifyTextMessage(message: Message, callback: ClassifyTextMessageCallback) {
         val mRequestQueue: RequestQueue
 
         // Instantiate the cache
@@ -374,7 +375,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
                 object : Response.Listener<String> {
                     override fun onResponse(response: String) {
                         val resp = Integer.parseInt(response) == 1
-                        callback.onClassifyTextMessageFinished(author, textMessage, resp)
+                        callback.onClassifyTextMessageFinished(message, resp)
                     }
                 },
                 object : Response.ErrorListener {
@@ -385,7 +386,7 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
             @Throws(AuthFailureError::class)
             override fun getParams(): Map<String, String> {
                 val params = HashMap<String, String>()
-                params.put("text", textMessage)
+                params.put("text", message.messageBody)
 
                 return params
             }
@@ -406,5 +407,6 @@ class MainActivity : AppCompatActivity(), ClassifyTextMessageCallback {
         internal val DEFAULT_CHANNEL_NAME = "general"
         internal val TAG = "TwilioChat"
     }
+
 
 }
